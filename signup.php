@@ -1,3 +1,32 @@
+<?php
+session_start();
+include '../db.php';
+
+if (isset($_POST['signup'])) {
+    $username = trim($_POST['username']);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    // Check if username already exists
+    $check = mysqli_query($conn, "SELECT * FROM admin WHERE username = '$username'");
+    if (mysqli_num_rows($check) > 0) {
+        $error = 'Username already taken';
+    } elseif ($password !== $confirm_password) {
+        $error = 'Passwords do not match';
+    } else {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $insert = mysqli_query($conn, "INSERT INTO admin (username, password) VALUES ('$username', '$hashedPassword')");
+
+        if ($insert) {
+            $_SESSION['admin'] = $username;
+            header('location: index.php');
+            exit();
+        } else {
+            $error = 'Signup failed. Try again.';
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

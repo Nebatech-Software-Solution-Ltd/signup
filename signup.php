@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../db.php';
+include 'db.php';
 
 if (isset($_POST['signup'])) {
     $username = trim($_POST['username']);
@@ -8,14 +8,14 @@ if (isset($_POST['signup'])) {
     $confirm_password = $_POST['confirm_password'];
 
     // Check if username already exists
-    $check = mysqli_query($conn, "SELECT * FROM admin WHERE username = '$username'");
+    $check = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
     if (mysqli_num_rows($check) > 0) {
         $error = 'Username already taken';
     } elseif ($password !== $confirm_password) {
         $error = 'Passwords do not match';
     } else {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $insert = mysqli_query($conn, "INSERT INTO admin (username, password) VALUES ('$username', '$hashedPassword')");
+        $insert = mysqli_query($conn, "INSERT INTO users (username, password_hash) VALUES ('$username', '$hashedPassword')");
 
         if ($insert) {
             $_SESSION['admin'] = $username;

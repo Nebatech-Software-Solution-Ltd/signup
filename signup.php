@@ -19,7 +19,7 @@ if (isset($_POST['signup'])) {
 
         if ($insert) {
             $_SESSION['admin'] = $username;
-       +     header('location: index.php');
+            header('location: index.php');
             exit();
         } else {
             $error = 'Signup failed. Try again.';
